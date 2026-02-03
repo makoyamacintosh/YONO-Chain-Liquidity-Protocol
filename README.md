@@ -179,6 +179,14 @@ Issue/PR templates & labels (to add)
 - bug, enhancement, design-discussion, security, audit, docs, test
 - Each PR should reference the milestone and include test coverage details
 
+Roadmap & next steps
+
+Phase 1 (complete): Core single-chain AMMs, factory, router prototype, basic stable pool, wrapper factory, registry.
+Phase 2: Account abstraction & gasless meta-tx: integrate OpenZeppelin TrustedForwarder + deploy Paymaster with economic model for subsidy pools.
+Phase 3: Cross-chain bridges: integrate LayerZero or Wormhole for messaging; build validator set + relayer infra.
+Phase 4: Concentrated liquidity: implement UniswapV3-style positions or integrate existing library.
+Phase 5: Audits & security hardening, mainnet rollouts.
+
 License
 - This prototype is released under the MIT License. (Add license file to the repo)
 
