@@ -1,5 +1,4 @@
-````markdown name=README.md
-# YONO-Chain Liquidity Protocol — Reference Prototype
+YONO-Chain Liquidity Protocol — Reference Prototype
 
 A reference/prototype implementation and technical blueprint for the YONO-Chain Liquidity Protocol: a multi‑chain DEX architecture combining a Universal Router, gasless transaction infrastructure (meta‑transactions / account abstraction), and cross‑chain bridging. This repository contains an educational Hardhat-based Solidity prototype that demonstrates the core building blocks: Factory / Pair AMM, StableSwap-like pool, wrapped token factory, router with cross‑chain hooks, a bridge locker skeleton, and minimal gasless forwarder/paymaster primitives.
 
