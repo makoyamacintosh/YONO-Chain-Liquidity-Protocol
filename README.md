@@ -182,6 +182,6 @@ License
 
 Contact & governance
 - Lead architect / maintainer: makoyamacintosh (GitHub: @makoyamacintosh)
-- Security disclosures: create a security@ yono domain / or use GitHub private security advisories (to be configured)
-- For enterprise / auditor engagement, please open an issue labeled `security` or `audit` with contact details.
+- Security disclosures:
+
 
