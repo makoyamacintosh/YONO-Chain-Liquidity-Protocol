@@ -185,19 +185,3 @@ Contact & governance
 - Security disclosures: create a security@ yono domain / or use GitHub private security advisories (to be configured)
 - For enterprise / auditor engagement, please open an issue labeled `security` or `audit` with contact details.
 
-Next immediate actions
-1. Create GitHub repository and add this README.md
-2. Commit the prototype contracts and scripts (existing skeleton)
-3. Open milestone "Phase 3 — Cross‑Chain & Gasless Infrastructure" and break it into issues:
-   - Implement OpenZeppelin TrustedForwarder
-   - Implement ERC‑4337 Paymaster (validatePaymasterUserOp)
-   - Design the bridge validator mechanics
-4. Decide which milestone you want to start first (I recommend Phase 3 next: Paymaster + relayer proof-of-concept) — we will convert that into an issue list and start implementing.
-
-If you'd like, I can:
-- Convert the Roadmap into a set of GitHub issues with checklists and suggested assignees.
-- Produce a PR that adds this README.md and the initial project skeleton to a new repo.
-- Start implementing Phase 3 tasks (choose one): A) Full Paymaster implementation and tests; B) Bridge validator design + watcher relayer prototype.
-
-Which of the above shall I do next?
-````
