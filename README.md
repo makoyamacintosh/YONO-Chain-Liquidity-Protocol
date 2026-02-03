@@ -1,8 +1,9 @@
-# YONO-Chain-Liquidity-Protocol
-DeFi today suffers from fragmented liquidity and high entry barriers, forcing users to juggle bridges, gas tokens, and inefficient capital across chains. This paper proposes a multi-chain DEX using a universal router, gasless transactions, and account abstraction to enable seamless, non-custodial trading comparable to CEXs.
-
+````markdown name=README.md
+# YONO-Chain Liquidity Protocol — Reference Prototype
 
 A reference/prototype implementation and technical blueprint for the YONO-Chain Liquidity Protocol: a multi‑chain DEX architecture combining a Universal Router, gasless transaction infrastructure (meta‑transactions / account abstraction), and cross‑chain bridging. This repository contains an educational Hardhat-based Solidity prototype that demonstrates the core building blocks: Factory / Pair AMM, StableSwap-like pool, wrapped token factory, router with cross‑chain hooks, a bridge locker skeleton, and minimal gasless forwarder/paymaster primitives.
+
+> WARNING: This codebase is an educational prototype — NOT production-ready. Do NOT deploy to mainnet without audits, gas optimizations, and production-grade libraries (OpenZeppelin, audited AMM implementations, audited paymaster & account abstraction logic, secure bridge validator set, etc).
 
 Table of contents
 - Project overview
@@ -177,14 +178,6 @@ Issue/PR templates & labels (to add)
 - bug, enhancement, design-discussion, security, audit, docs, test
 - Each PR should reference the milestone and include test coverage details
 
-Roadmap & next steps
-
-Phase 1 (complete): Core single-chain AMMs, factory, router prototype, basic stable pool, wrapper factory, registry.
-Phase 2: Account abstraction & gasless meta-tx: integrate OpenZeppelin TrustedForwarder + deploy Paymaster with economic model for subsidy pools.
-Phase 3: Cross-chain bridges: integrate LayerZero or Wormhole for messaging; build validator set + relayer infra.
-Phase 4: Concentrated liquidity: implement UniswapV3-style positions or integrate existing library.
-Phase 5: Audits & security hardening, mainnet rollouts.
-
 License
 - This prototype is released under the MIT License. (Add license file to the repo)
 
@@ -192,3 +185,20 @@ Contact & governance
 - Lead architect / maintainer: makoyamacintosh (GitHub: @makoyamacintosh)
 - Security disclosures: create a security@ yono domain / or use GitHub private security advisories (to be configured)
 - For enterprise / auditor engagement, please open an issue labeled `security` or `audit` with contact details.
+
+Next immediate actions
+1. Create GitHub repository and add this README.md
+2. Commit the prototype contracts and scripts (existing skeleton)
+3. Open milestone "Phase 3 — Cross‑Chain & Gasless Infrastructure" and break it into issues:
+   - Implement OpenZeppelin TrustedForwarder
+   - Implement ERC‑4337 Paymaster (validatePaymasterUserOp)
+   - Design the bridge validator mechanics
+4. Decide which milestone you want to start first (I recommend Phase 3 next: Paymaster + relayer proof-of-concept) — we will convert that into an issue list and start implementing.
+
+If you'd like, I can:
+- Convert the Roadmap into a set of GitHub issues with checklists and suggested assignees.
+- Produce a PR that adds this README.md and the initial project skeleton to a new repo.
+- Start implementing Phase 3 tasks (choose one): A) Full Paymaster implementation and tests; B) Bridge validator design + watcher relayer prototype.
+
+Which of the above shall I do next?
+````
