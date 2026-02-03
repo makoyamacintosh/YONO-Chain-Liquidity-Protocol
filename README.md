@@ -4,8 +4,6 @@ DeFi today suffers from fragmented liquidity and high entry barriers, forcing us
 
 A reference/prototype implementation and technical blueprint for the YONO-Chain Liquidity Protocol: a multi‑chain DEX architecture combining a Universal Router, gasless transaction infrastructure (meta‑transactions / account abstraction), and cross‑chain bridging. This repository contains an educational Hardhat-based Solidity prototype that demonstrates the core building blocks: Factory / Pair AMM, StableSwap-like pool, wrapped token factory, router with cross‑chain hooks, a bridge locker skeleton, and minimal gasless forwarder/paymaster primitives.
 
-> WARNING: This codebase is an educational prototype — NOT production-ready. Do NOT deploy to mainnet without audits, gas optimizations, and production-grade libraries (OpenZeppelin, audited AMM implementations, audited paymaster & account abstraction logic, secure bridge validator set, etc).
-
 Table of contents
 - Project overview
 - Key features (prototype)
