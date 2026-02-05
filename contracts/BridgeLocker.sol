@@ -21,7 +21,7 @@ contract BridgeLocker {
 
     // Unlock (burn on bridge) is for admin/validators only in this prototype
     function unlock(address token, address to, uint256 amount, bytes32 depositId) external {
-        // In production, this would be restricted to validators and include multi-sig / proof
+        // In production, this would be restricted to validators and include multi-sig or proof
         ERC20Like(token).transfer(to, amount);
         emit Unlocked(token, to, amount, depositId);
     }
