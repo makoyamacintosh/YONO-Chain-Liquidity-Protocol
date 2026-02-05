@@ -1,62 +1,69 @@
-# YONO-Chain Liquidity Protocol
+# YONO-Chain Liquidity Protocol  
+**Technical Whitepaper v1.0 – Reference Architecture**
 
-**Technical Whitepaper v1.0 (Reference Architecture)**
+> **⚠️ Important Disclaimer**  
+> This document describes an **educational reference architecture and prototype**.  
+> It is **not production-ready**, **has not been audited**, and **must never be used to custody real funds** without comprehensive hardening, formal verification, and third-party security audits.
 
-> WARNING **Disclaimer**
-> This document describes a reference architecture and educational prototype. It is not production-ready, has not been audited, and must not be used to custody real value without significant hardening and external security reviews.
+---
 
 ## 1. Executive Summary
 
-Decentralized Finance (DeFi) has unlocked open access to financial primitives, yet it remains fragmented across blockchains and burdened by user experience friction. Liquidity is siloed across networks, users must manage multiple wallets and gas tokens, and capital efficiency suffers as a result.
+Decentralized Finance (DeFi) has democratized access to powerful financial tools, yet it continues to suffer from **fragmentation across chains**, poor user experience, and capital inefficiency.
 
-The YONO-Chain Liquidity Protocol proposes a unified, multi-chain decentralized exchange (DEX) architecture that abstracts these complexities. By combining a Universal Router, cross-chain liquidity abstraction, and gasless transaction infrastructure, YONO aims to deliver a seamless, non-custodial trading experience approaching the usability of centralized exchanges.
+**YONO-Chain Liquidity Protocol** is an **educational exploration** of a modular, multi-chain DEX architecture that aims to abstract away much of this complexity through:
 
-This whitepaper documents the system design, architectural principles, and planned evolution of the protocol.
+- A **Universal Router** for composable execution  
+- **Cross-chain liquidity abstraction** via wrapped assets  
+- **Gasless transactions** using meta-transactions and account abstraction patterns
 
-## 1.5 2026 Context & Positioning
+This whitepaper serves as a detailed technical reference and living design document — not as a production specification.
 
-In 2026, chain abstraction via intent-based systems (e.g., solvers competing on user-declared outcomes, ERC-7683 standards, protocols like Across, Relay, Mitosis) has become the dominant pattern for cross-chain DeFi UX. Native account abstraction on major L2s has made gas sponsorship routine, and bridges increasingly favor intent-driven or native transfers over classic lock/mint models.
+### 1.5 2026 Context & Positioning
 
-This reference architecture deliberately retains an on-chain universal router + explicit bridge/paymaster components for educational value:
+In 2026, **chain abstraction** and **intent-centric execution** (Across, Relay, Mitosis, ERC-7683 solvers, etc.) dominate real-world cross-chain UX. Native account abstraction on L2s has made gas sponsorship commonplace.
 
-- To teach modular EVM internals (factories, pools, composable routing) before relying on black-box solvers.
-- As a controlled playground to experiment with AMM variants, fee mechanics, or hybrid intent/on-chain flows.
-- To illustrate progressive hardening paths (trusted → verified → decentralized) in a transparent way.
+This prototype **intentionally keeps** an explicit on-chain universal router, basic lock/mint bridge, and paymaster components **for educational purposes**:
 
-It is not positioned as a direct competitor to production intent/solver networks, but as foundational building-block knowledge that remains relevant for understanding, forking, or integrating with abstracted systems.
+- To help developers deeply understand modular EVM building blocks  
+- As a transparent playground for experimenting with AMM curves, fees, and hybrid flows  
+- To clearly illustrate trust evolution paths (trusted → cryptographically verified → decentralized)
+
+It is **not** trying to compete with production intent/solver networks — it exists to teach foundational concepts that remain useful even in an intent-dominated world.
+
+---
 
 ## 2. Problem Statement
 
-### 2.1 Liquidity Fragmentation
+### 2.1 Liquidity Fragmentation  
+Liquidity remains spread across Ethereum L1, dozens of L2s, and alternative L1s → shallow pools, high slippage, fragmented price discovery.  
+While intents and aggregators hide much of this from retail users, **builders and app-chains** still face real complexity underneath.
 
-Liquidity is distributed across multiple blockchains (Ethereum, L2s, alternative L1s), leading to shallow pools and inefficient price discovery. While intents and aggregation layers have significantly reduced perceived fragmentation for retail users, underlying liquidity silos and execution complexity still exist for builders, app-chains, and certain high-precision use cases.
+### 2.2 Gas & Onboarding Friction  
+Requiring users to hold native gas tokens per chain creates unnecessary barriers — especially painful for newcomers.
 
-### 2.2 Gas & Onboarding Friction
+### 2.3 Capital Inefficiency  
+Isolated pools + limited routing = worse execution prices.  
+Even solver-optimized paths benefit from understanding strong on-chain primitives for composability and fallback scenarios.
 
-Users are required to acquire native gas tokens for each chain, creating unnecessary friction and excluding non-technical users.
+---
 
-### 2.3 Capital Inefficiency
+## 3. Core Design Principles
 
-Isolated AMM pools and limited routing logic lead to higher slippage and suboptimal execution. Even with solver networks optimizing paths off-chain, on-chain primitives remain essential for composability and experimentation.
+- **Chain abstraction** — users shouldn’t think about chains  
+- **Composable & modular routing** — easy to extend and reason about  
+- **Explicit trust assumptions** — never hidden, always documented  
+- **Security-first mindset** — correctness > features > polish  
+- **Progressive decentralization** — start simple & trusted → harden over time  
 
-## 3. Design Goals
+---
 
-The protocol is designed around the following principles:
-
-* Chain abstraction: users should not need to reason about chain boundaries
-* Composable routing: execution logic should be modular and extensible
-* Explicit trust assumptions: prototype trust is documented, not hidden
-* Security-first evolution: correctness before UX polish
-* Progressive decentralization: trusted components can be replaced over time
-
-## 4. System Architecture Overview
-
-YONO follows a layered architecture separating concerns between user interaction, execution, and settlement.
+## 4. High-Level Architecture
 
 ```mermaid
 graph TD
-    A[User Layer: Wallets & Interfaces] --> B[Frontend / Application Layer: Aggregation & Submission]
-    B --> C[Smart Contract Layer: Router, Factory, Pools, Fees]
-    C --> D[Cross-Chain Bridge Layer: Lock/Mint & Validators]
-    C --> E[Gasless Infrastructure: Forwarder & Paymaster]
-    D --> F[Off-Chain Components: Relayers & Solvers (Future)]
+    A[User Layer<br>Wallets & Interfaces] --> B[Frontend Layer<br>Aggregation & Submission]
+    B --> C[Smart Contract Layer<br>Router • Pools • Fees]
+    C --> D[Bridge Layer<br>Lock / Mint • Validators]
+    C --> E[Gasless Layer<br>Forwarder • Paymaster]
+    D --> F[Off-Chain<br>Relayers • Future Solvers]
