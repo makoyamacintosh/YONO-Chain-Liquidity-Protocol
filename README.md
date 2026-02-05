@@ -1,25 +1,38 @@
 # YONO-Chain Liquidity Protocol
 
-**Reference Architecture & Educational Prototype**
+**Reference Architecture & Prototype**
 
-> ⚠️ **Important Notice**
-> This repository contains an **educational, non-production prototype** intended to demonstrate the architectural building blocks of a multi-chain, gasless decentralized exchange (DEX).
->
+> ⚠️ **Important Notice**  
+> This repository contains an **educational, non-production prototype** intended to demonstrate the architectural building blocks of a multi-chain, gasless decentralized exchange (DEX).  
 > The codebase **has not been audited** and **must not be deployed to mainnet** without extensive security reviews, hardened implementations, and production-grade dependencies (e.g. OpenZeppelin, audited AMMs, secure bridge messaging).
+
+---
+
+## Why still build / explore this in 2026?
+
+In 2026, chain abstraction and intent-centric execution (via solvers, fillers, and networks like 1inch Fusion, CoW Swap, Across, or NEAR Intents) have become dominant for real user-facing cross-chain DeFi UX. Native account abstraction on major L2s has made gas sponsorship common and cheap.
+
+Yet this prototype remains valuable as:
+
+- A **teaching tool** to deeply understand modular DEX internals (factories, routers, pools, wrappers) before treating them as black boxes.
+- A **reference playground** for experimenting with AMM curves, fee mechanisms, or composability patterns in a controlled EVM environment.
+- A starting point for teams building chain-specific forks, app-chains, or hybrid systems that still need on-chain execution primitives.
+
+It bridges classic DeFi building blocks (Uniswap V2/V3 DNA + stable swaps + meta-tx) with modern concepts — while being explicit about where it diverges from today's solver-heavy reality.
 
 ---
 
 ## Overview
 
-The decentralized finance (DeFi) ecosystem is fragmented across multiple blockchains, liquidity pools, and user experiences. Users must manage different wallets, gas tokens, and bridges, while liquidity providers face capital inefficiency and poor routing across isolated markets.
+The DeFi ecosystem remains fragmented across chains, despite major progress in interoperability and abstraction. Users still face wallet/chain management friction in many contexts, and liquidity providers deal with inefficient capital allocation across isolated pools.
 
-**YONO-Chain Liquidity Protocol** explores a unified, modular DEX architecture that addresses these challenges by combining:
+**YONO-Chain Liquidity Protocol** is an educational exploration of a unified, modular DEX architecture that combines:
 
-* **A Universal Router** for flexible, multi-hop execution
-* **Cross-chain liquidity abstraction** via wrapped assets
-* **Gasless transactions** using meta-transactions and account abstraction
+- **A Universal Router** for flexible multi-hop execution (on-chain reference implementation)
+- **Cross-chain liquidity abstraction** via wrapped assets and basic bridging
+- **Gasless transactions** using meta-transactions and account abstraction (EIP-2771 + ERC-4337 stubs)
 
-The goal of this repository is to act as a **technical reference and experimentation platform**, not a finished product.
+The goal is purely **technical reference, learning, and experimentation** — not a production protocol or competitor to intent/solver networks.
 
 ---
 
@@ -27,148 +40,37 @@ The goal of this repository is to act as a **technical reference and experimenta
 
 ### Multi-Chain Liquidity
 
-* Support for multiple blockchains (initially EVM-focused)
-* Lock & Mint / Burn & Unlock bridging model
-* Wrapped asset representations (e.g. wETH, wBTC)
-* Cross-chain liquidity pools routed through a single interface
+- EVM-focused chains (expandable)
+- Lock & Mint / Burn & Unlock bridging model (prototype skeleton)
+- Wrapped asset representations (e.g. wETH, wBTC)
+- Cross-chain pools routed through a single interface (on-chain router focus for education)
 
 ### Universal Routing
 
-* A central Router contract acts as the execution hub
-* Routes swaps across multiple pool types
-* Emits structured events for cross-chain execution hooks
-* Designed to be extensible rather than tightly coupled
+- Central Router contract as execution hub
+- Routes across multiple pool types (constant-product, stable)
+- Emits events for potential cross-chain hooks
+- Extensible design — intentionally on-chain to teach composition (contrast with 2026 off-chain solver dominance)
 
 ### Gasless Transactions
 
-* **EIP-2771 Trusted Forwarder** for meta-transactions
-* **ERC-4337 Paymaster** for sponsored gas execution
-* Relayer integrations (Gelato, Biconomy, OpenGSN)
-* Users sign messages instead of sending on-chain transactions
+- EIP-2771 Trusted Forwarder for meta-transactions
+- ERC-4337 Paymaster stub for sponsored execution
+- Relayer compatibility (Gelato, Biconomy, OpenGSN patterns)
+- Users sign messages — educational demo (note: many L2s now offer native/cheap gasless natively)
 
 ---
 
 ## High-Level Architecture
 
-```
-User Wallets
-     ↓
-Frontend / dApp
-     ↓
-Universal Router
- ┌───────────────┐
- │ AMM Pools     │
- │ Stable Pools  │
- │ Staking       │
- └───────────────┘
-     ↓
-Bridge Locker ──► Off-chain Validators / Relayers
-     ↓
-Wrapped Assets on Destination Chain
-```
-
-The system intentionally separates:
-
-* **Execution logic** (on-chain)
-* **Routing and composition** (Router)
-* **Cross-chain messaging and validation** (off-chain, prototype)
-
----
-
-## Repository Structure
-
-This repository contains modular Solidity contracts and supporting tooling:
-
-* `contracts/YonoFactory.sol` — Pool and pair creation
-* `contracts/YonoPair.sol` — Constant-product AMM (prototype)
-* `contracts/StableSwapPool.sol` — Simplified Curve-style pool
-* `contracts/YonoRouter.sol` — Universal router with cross-chain hooks
-* `contracts/WrappedToken.sol` — Mintable/burnable wrapped asset
-* `contracts/WrappedTokenFactory.sol` — Wrapped token deployment
-* `contracts/BridgeLocker.sol` — Lock & Mint bridge custody skeleton
-* `contracts/TrustedForwarder.sol` — Minimal EIP-2771 forwarder
-* `contracts/Paymaster.sol` — Simplified ERC-4337 paymaster stub
-* `contracts/FeeCollector.sol` — Protocol fee accounting
-* `contracts/Staking.sol` — LP staking skeleton
-
----
-
-## Trust Model (Prototype)
-
-This codebase makes **explicit trust assumptions** for educational purposes:
-
-* Bridge unlocks are authorized by a trusted admin or validator set
-* Off-chain relayers and validators are assumed to be honest
-* No cryptographic proof verification is implemented
-* Gas sponsorship is centralized
-
-These assumptions are **intentional and documented**, and are planned to be refined in later phases.
-
----
-
-## Development Phases
-
-### Phase 1 — Research & Architecture (Prototype)
-
-* System design and architectural exploration
-* AMM models (constant product, stable swap)
-
-### Phase 2 — Core Smart Contracts (Prototype)
-
-* Factory, pools, and router
-* Fee collection and staking logic
-
-### Phase 3 — Cross-Chain & Gasless Infrastructure (Planned)
-
-* Bridge validator design
-* Meta-transaction and Paymaster hardening
-
-### Phase 4 — Frontend & Multi-Chain UX (Planned)
-
-* Multi-wallet integration
-* Analytics and portfolio views
-
-### Phase 5 — Security & Testnet (Planned)
-
-* External audits
-* Fuzzing and invariant testing
-
-### Phase 6 — Mainnet & Governance (Planned)
-
-* Liquidity bootstrapping
-* DAO governance transition
-
----
-
-## Security First
-
-Security-critical primitives are prioritized over UX features. Planned work includes:
-
-* Formal threat modeling
-* Adversarial testing (replay, griefing, invariant violations)
-* Contract-level audit checklists
-* External third-party audits before any production deployment
-
-See:
-
-* [`SECURITY.md`](./SECURITY.md)
-* [`THREAT_MODEL.md`](./THREAT_MODEL.md)
-
----
-
-## Documentation
-
-* [`WHITEPAPER.md`](./WHITEPAPER.md) — Technical architecture and design rationale
-* `/docs/architecture.md` — Architecture diagrams and sequence flows (planned)
-
----
-
-## Disclaimer
-
-This repository is **not investment advice**, **not production software**, and **not a live protocol**. It is a reference implementation intended for learning, experimentation, and collaborative design.
-
----
-
-## License
-
-MIT License
+```mermaid
+graph TD
+    A[User Wallet<br>(any chain)] --> B[Frontend / dApp]
+    B --> C[Signs UserOp / Meta-Tx]
+    C --> D[Universal Router on Source Chain]
+    D --> E[Local AMM Pools<br>(Constant Product / Stable)]
+    D --> F[BridgeLocker: Lock Tokens<br>+ Emit Event]
+    F --> G[Off-chain Relayers / Validators<br>(trusted in prototype)]
+    G --> H[Destination Chain: Mint Wrapped Assets]
+    H --> I[Router on Dest Chain: Execute Swap / Hook]
+    I --> J[User receives result]
