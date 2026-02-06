@@ -20,7 +20,7 @@ contract FeeCollector {
     }
 
     function collect(address token, uint256 amount) external {
-        // In practice pairs would call collect after each swap (transfer tokens to collector)
+        // In actual practice pairs would call collect after each swap (transfer tokens to collector)
         ERC20Like(token).transferFrom(msg.sender, address(this), amount);
         collected[token] += amount;
         emit FeeCollected(token, amount);
