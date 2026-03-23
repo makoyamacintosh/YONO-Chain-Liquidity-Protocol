@@ -4,24 +4,46 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deploying with", deployer.address);
 
-  const ERC20 = await ethers.getContractFactory("ERC20Mock");
-  const tokenA = await ERC20.deploy("Token A", "TKA", 18, ethers.utils.parseEther("1000000"));
-  const tokenB = await ERC20.deploy("Token B", "TKB", 18, ethers.utils.parseEther("1000000"));
-  await tokenA.deployed(); await tokenB.deployed();
-  console.log("Tokens:", tokenA.address, tokenB.address);
+  // Helper to deploy ERC20 tokens
+  async function deployERC20(name: string, symbol: string, supply: string) {
+    const ERC20 = await ethers.getContractFactory("ERC20Mock");
+    const token = await ERC20.deploy(name, symbol, 18, ethers.utils.parseEther(supply));
+    await token.deployed();
+    return token;
+  }
 
-  const factory = await ethers.getContractFactory("YonoFactory");
-  const f = await factory.deploy();
-  await f.deployed();
-  console.log("Factory:", f.address);
+  // Deploy tokens in parallel
+  const [tokenA, tokenB] = await Promise.all([
+    deployERC20("Token A", "TKA", "1000000"),
+    deployERC20("Token B", "TKB", "1000000")
+  ]);
+  console.log("Tokens deployed:", tokenA.address, tokenB.address);
 
-  const feeCollectorFactory = await ethers.getContractFactory("FeeCollector");
+  // Deploy factory (independent, can be parallel with paymaster)
+  const factoryPromise = (async () => {
+    const Factory = await ethers.getContractFactory("YonoFactory");
+    const f = await Factory.deploy();
+    await f.deployed();
+    return f;
+  })();
+
+  // Deploy paymaster (independent) and then feeCollector (dependent)
   const paymasterFactory = await ethers.getContractFactory("Paymaster");
   const paymaster = await paymasterFactory.deploy();
   await paymaster.deployed();
+
+  const feeCollectorFactory = await ethers.getContractFactory("FeeCollector");
   const feeCollector = await feeCollectorFactory.deploy(paymaster.address);
   await feeCollector.deployed();
-  console.log("Paymaster:", paymaster.address, "FeeCollector:", feeCollector.address);
+
+  const factory = await factoryPromise;
+
+  console.log("Factory deployed:", factory.address);
+  console.log("Paymaster deployed:", paymaster.address);
+  console.log("FeeCollector deployed:", feeCollector.address);
 }
 
-main().catch((error) => { console.error(error); process.exitCode = 1; });  
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
