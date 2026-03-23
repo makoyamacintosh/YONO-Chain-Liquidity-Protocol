@@ -15,7 +15,7 @@ This document defines the formal threat model for the YONO-Chain Liquidity Proto
 * Cross-Chain Bridge (Lock & Mint / Burn & Unlock)
 * Wrapped Token Factory
 * Gasless Infrastructure (Trusted Forwarder, Paymaster, Relayers)
-* Validator / Relayer off-chain services
+* Validator and / Relayer off-chain services
 
 **Out of Scope (Explicit)**
 
